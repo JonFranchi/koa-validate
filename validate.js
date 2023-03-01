@@ -5,7 +5,7 @@ const path = require('path');
 const { JSONPath } = require('jsonpath-plus');
 
 function getValue(obj, key, transFn) {
-  if ((key.startsWith('$') || key.startsWith('#/')) && transFn) {
+  if (key.startsWith('$') && transFn) {
     let result = JSONPath({
       path: key,
       json: obj,
@@ -19,7 +19,7 @@ function getValue(obj, key, transFn) {
 }
 
 function hasKey(obj, key, transFn) {
-  if ((key.startsWith('/') || key.startsWith('#/')) && transFn) {
+  if (key.startsWith('/') && transFn) {
     let result = JSONPath({
       path: key,
       json: obj,
