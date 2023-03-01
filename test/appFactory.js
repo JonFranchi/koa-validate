@@ -3,7 +3,7 @@
 const koa = require('koa');
 
 exports.create = function(type) {
-	var app =	 new koa();
+	var app = new koa();
 	require('../validate.js')(app);
 	var router = require('koa-router')();
 	if(1 == type) {
