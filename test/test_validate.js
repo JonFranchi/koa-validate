@@ -6,7 +6,7 @@ appFactory = require('./appFactory.js');
 require('should');
 
 describe('koa-validate' , function(){
-	it("these validates should be to ok" , function(done){
+	it("returns OK when for all passing validators" , function(done){
 		var app = appFactory.create(1);
 		app.router.post('/validate',function*(){
 			this.checkBody('optional').optional().len(3,20);
@@ -79,6 +79,7 @@ describe('koa-validate' , function(){
 			this.checkBody('mac').isMACAddress();
 			this.checkBody('isin').isISIN();
 			this.checkBody('fqdn').isFQDN();
+			this.checkBody('exists').exist();
 			if(this.errors){
 				this.body = this.errors;
 				return;
@@ -148,12 +149,13 @@ describe('koa-validate' , function(){
 			mac:"C8:3A:35:CC:ED:80",
 			isin:"US0378331005",
 			fqdn:"www.google.com",
+			exists: "here",
 		})
 		.expect(200)
 		.expect('ok' ,done);
 	});
 
-	it("these validates fail tests should be to ok" , function(done){
+	it("returns errors for failing validators" , function(done){
 		var app = appFactory.create();
 		app.router.post('/validate',function*(ctx){
 			this.checkBody('name').notEmpty().len(3,20);
@@ -217,7 +219,8 @@ describe('koa-validate' , function(){
 			this.checkBody('isin').isISIN();
 			this.checkBody('fqdn').isFQDN();
 			this.checkBody('fqdn1').isFQDN();
-			if(this.errors.length === 61){
+			this.checkBody('exists').exist();
+			if(this.errors.length === 62){
 				this.body = 'ok';
 				return ;
 			}
@@ -285,7 +288,7 @@ describe('koa-validate' , function(){
 		.expect('ok' ,done);
 	});
 
-	it('there validate query should be to okay' , function(done){
+	it('validates query parameters' , function(done){
 		const app = appFactory.create();
 		app.router.get('/query',function*(){
 			this.checkQuery('name').notEmpty();
@@ -304,7 +307,7 @@ describe('koa-validate' , function(){
 		}).expect(200)
 		.expect('ok' , done);
 	});
-	it('there validate params should be to okay' , function(done){
+	it('validates url parameters' , function(done){
 		var app = appFactory.create();
 		app.router.get('/:id',function*(){
 			this.checkParams('id').isInt();

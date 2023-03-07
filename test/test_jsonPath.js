@@ -81,6 +81,7 @@ describe('koa-validate type' , function(){
       this.checkBody('$.', true).notEmpty();
       this.checkBody('$.store.book[0].price', true).get(0).type('number').type('primitive');
       this.checkBody('$.store.book[0].price', true).get(0).type('hello'); // should warn
+      this.checkBody('$.store.book[0].price', true).exist();
       this.checkBody('$.store.book[0].category', true).first().type('string');
       this.checkBody('$.store.book[*].price', true).type('array');
       this.checkBody('$.store.book[0].publishDate', true).get(0).toDate().type('date').type('object');
@@ -96,7 +97,7 @@ describe('koa-validate type' , function(){
     .send(data)
     .expect(200 , done);
   });
-it("type fail check" , function(done){
+  it("type fail check" , function(done){
     const app = appFactory.create(1);
     app.router.post('/json',function*(){
       this.checkBody('$.', true).type('null');
