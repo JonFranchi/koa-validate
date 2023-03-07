@@ -47,6 +47,7 @@ describe('koa-validate json path' , function(){
 		const app = appFactory.create(1);
 		app.router.post('/json',function*(){
       this.checkBody('$.store.bicycle.color', true).notEmpty();
+      this.checkBody('$.store.book[0].price', true).exist();
       this.checkBody('$.store.book[0].price', true).get(0).eq(8.95);
       this.checkBody('$.store.book[0].price', true).get(0).isFloat().eq(8.95);
       this.checkBody('$.store.book[0].disabled', true).first().notEmpty().toBoolean();
@@ -81,7 +82,6 @@ describe('koa-validate type' , function(){
       this.checkBody('$.', true).notEmpty();
       this.checkBody('$.store.book[0].price', true).get(0).type('number').type('primitive');
       this.checkBody('$.store.book[0].price', true).get(0).type('hello'); // should warn
-      this.checkBody('$.store.book[0].price', true).exist();
       this.checkBody('$.store.book[0].category', true).first().type('string');
       this.checkBody('$.store.book[*].price', true).type('array');
       this.checkBody('$.store.book[0].publishDate', true).get(0).toDate().type('date').type('object');
@@ -101,11 +101,12 @@ describe('koa-validate type' , function(){
     const app = appFactory.create(1);
     app.router.post('/json',function*(){
       this.checkBody('$.', true).type('null');
+      this.checkBody('$.store.cheeseburger', true).exist();
       this.checkBody('$.store.book[0].price', true).get(0).type('string');
       this.checkBody('$.store.book[0].category', true).first().type('null');
       this.checkBody('$.store.book[*].price', true).type('nullorundefined');
       this.checkBody('$.store.book[0].publishDate', true).first().toDate().type('array');
-      if(this.errors && 5==this.errors.length) {
+      if(this.errors && 6 == this.errors.length) {
         this.status=200;
       }else{
         this.status=500;

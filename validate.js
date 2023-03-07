@@ -27,7 +27,7 @@ const hasKey = (obj, key, transFn) => {
       resultType: 'all'
     });
     if (!Array.isArray(result)) result = [result];
-    return result.length > 0;
+    return result.length === 1 && result[0] !== undefined;
   }
   return key in obj;
 }
